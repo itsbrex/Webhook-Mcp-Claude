@@ -31,10 +31,10 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.4.1",
+    "@types/node": "^20.11.5",
     "axios": "^1.6.5"
   },
   "devDependencies": {
-    "@types/node": "^20.11.5",
     "typescript": "^5.3.3"
   },
   "files": [

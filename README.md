@@ -1,10 +1,11 @@
 # MCP Webhook Server
 
-An MCP server implementation that integrates with webhooks, providing message sending capabilities.
+An MCP server implementation that integrates with webhooks, providing message sending capabilities and response retrieval.
 
 ## Features
 
 * **Generic Webhook Support**: Send messages to any webhook endpoint
+* **Response Tracking**: Get responses from webhook calls
 * **Custom Username**: Set custom display name for messages
 * **Avatar Support**: Customize message avatar
 * **MCP Integration**: Works with Dive and other MCP-compatible LLMs
@@ -33,7 +34,8 @@ npm install @kevinwatt/mcp-webhook
         "WEBHOOK_URL": "your-webhook-url"
       },
       "alwaysAllow": [
-        "send_message"
+        "send_message",
+        "get_response"
       ]
     }
   }
@@ -50,6 +52,15 @@ npm install @kevinwatt/mcp-webhook
     * `content` (string, required): Message content to send
     * `username` (string, optional): Display name
     * `avatar_url` (string, optional): Avatar URL
+  * Returns:
+    * Request ID for tracking the response
+
+* **get_response**
+  * Get the response for a previously sent webhook message
+  * Inputs:
+    * `requestId` (string, required): Request ID from send_message
+  * Returns:
+    * Response status and data from the webhook call
 
 ## Usage Examples
 
@@ -57,6 +68,7 @@ Ask your LLM to:
 ```
 "Send a message to webhook: Hello World!"
 "Send a message with custom name: content='Testing', username='Bot'"
+"Get the response for request: requestId='abc-123'"
 ```
 
 ## Manual Start
@@ -71,6 +83,13 @@ npx @kevinwatt/mcp-webhook
 
 * Node.js 18+
 * MCP-compatible LLM service
+
+## Response Handling
+
+The server keeps track of webhook responses for 24 hours. Each response includes:
+- Status (PENDING, COMPLETED, FAILED, TIMEOUT)
+- Response data from the webhook
+- Timestamps for request and response
 
 ## License
 

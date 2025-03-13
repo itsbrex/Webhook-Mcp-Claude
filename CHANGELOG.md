@@ -43,3 +43,18 @@
      - Run tests
      - Publish to NPM
      - Create a GitHub release
+
+## [0.2.0] - 2024-03-13
+
+### Added
+- Response tracking functionality with `get_response` tool
+- In-memory storage for webhook responses
+- Request ID generation for response tracking
+- Automatic cleanup of expired responses (24-hour retention)
+- Response status tracking (PENDING, COMPLETED, FAILED, TIMEOUT)
+- Enhanced error handling with response storage
+
+### Changed
+- Updated `send_message` to return request IDs
+- Enhanced documentation with response handling details
+- Added response retrieval examples
