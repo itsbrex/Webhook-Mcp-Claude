@@ -13,7 +13,7 @@ An MCP server implementation that integrates with webhooks, providing message se
 ## Installation
 
 ```bash
-npm install @kevinwatt/mcp-webhook
+npm install @abdo-el-mobayad/mcp-webhook
 ```
 
 ## Configuration with [Dive Desktop](https://github.com/OpenAgentPlatform/Dive)
@@ -28,7 +28,7 @@ npm install @kevinwatt/mcp-webhook
       "command": "npx",
       "args": [
         "-y",
-        "@kevinwatt/mcp-webhook"
+        "@abdo-el-mobayad/mcp-webhook"
       ],
       "env": {
         "WEBHOOK_URL": "your-webhook-url"
@@ -76,7 +76,7 @@ Ask your LLM to:
 If needed, start the server manually:
 
 ```bash
-npx @kevinwatt/mcp-webhook
+npx @abdo-el-mobayad/mcp-webhook
 ```
 
 ## Requirements
@@ -86,7 +86,7 @@ npx @kevinwatt/mcp-webhook
 
 ## Response Handling
 
-The server keeps track of webhook responses for 24 hours. Each response includes:
+The server keeps track of webhook responses for 1 hour. Each response includes:
 - Status (PENDING, COMPLETED, FAILED, TIMEOUT)
 - Response data from the webhook
 - Timestamps for request and response
@@ -97,7 +97,11 @@ MIT
 
 ## Author
 
-kevinwatt
+Abdo El Mobayad
+
+## Repository
+
+[GitHub Repository](https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude)
 
 ## Keywords
 

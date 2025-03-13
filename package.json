@@ -1,6 +1,6 @@
 {
-  "name": "@kevinwatt/mcp-webhook",
-  "version": "0.1.11",
+  "name": "@abdo-el-mobayad/mcp-webhook",
+  "version": "0.2.0",
   "description": "Generic Webhook MCP Server",
   "type": "module",
   "main": "build/index.js",
@@ -27,7 +27,7 @@
     "mattermost",
     "automation"
   ],
-  "author": "kevinwatt",
+  "author": "Abdo El Mobayad",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.4.1",
@@ -45,10 +45,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kevinwatt/mcp-webhook.git"
+    "url": "git+https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude.git"
   },
   "bugs": {
-    "url": "https://github.com/kevinwatt/mcp-webhook/issues"
+    "url": "https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude/issues"
   },
-  "homepage": "https://github.com/kevinwatt/mcp-webhook#readme"
+  "homepage": "https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude#readme"
 }
