@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 export interface WebhookRequest {
   requestId: string;
@@ -27,5 +27,37 @@ class RequestStore {
     cleanupIntervalMs: 15 * 60 * 1000, // 15 minutes
   };
   
-  // ... existing code ...
-} 
+  constructor() {
+    setInterval(() => this.cleanup(), this.config.cleanupIntervalMs);
+  }
+  
+  saveRequest(request: WebhookRequest): void {
+    this.requests.set(request.requestId, request);
+  }
+  
+  getRequest(requestId: string): WebhookRequest | undefined {
+    return this.requests.get(requestId);
+  }
+  
+  updateRequest(requestId: string, updates: Partial<WebhookRequest>): void {
+    const request = this.requests.get(requestId);
+    if (request) {
+      this.requests.set(requestId, { ...request, ...updates });
+    }
+  }
+  
+  cleanup(): void {
+    const now = Date.now();
+    for (const [requestId, request] of this.requests.entries()) {
+      if (request.expiresAt < now) {
+        this.requests.delete(requestId);
+      }
+    }
+  }
+
+  generateRequestId(): string {
+    return randomUUID();
+  }
+}
+
+export const store = new RequestStore(); 
