@@ -1,7 +1,7 @@
 {
   "name": "@abdo-el-mobayad/mcp-webhook",
-  "version": "0.2.0",
-  "description": "Generic Webhook MCP Server",
+  "version": "0.3.0",
+  "description": "Generic Webhook MCP Server with automatic response handling",
   "type": "module",
   "main": "build/index.js",
   "bin": {
@@ -45,10 +45,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Abdo-El-Mobayad/webhook-mcp-claude.git"
+    "url": "git+https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude.git"
   },
   "bugs": {
-    "url": "https://github.com/Abdo-El-Mobayad/webhook-mcp-claude/issues"
+    "url": "https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude/issues"
   },
-  "homepage": "https://github.com/Abdo-El-Mobayad/webhook-mcp-claude#readme"
+  "homepage": "https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude#readme"
 }

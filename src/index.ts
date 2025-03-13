@@ -36,6 +36,21 @@ const isValidGetResponseArgs = (args: unknown): args is GetResponseArgs => {
   return typeof requestId === 'string';
 };
 
+// Helper function to wait for response with timeout
+const waitForResponse = async (requestId: string, timeoutMs: number = 300000): Promise<WebhookRequest | undefined> => {
+  const startTime = Date.now();
+  
+  while (Date.now() - startTime < timeoutMs) {
+    const request = store.getRequest(requestId);
+    if (request?.status === 'COMPLETED' || request?.status === 'FAILED') {
+      return request;
+    }
+    await new Promise(resolve => setTimeout(resolve, 100)); // Poll every 100ms
+  }
+  
+  return undefined;
+};
+
 class WebhookServer {
   private server: Server;
   private webhookUrl: string;
@@ -50,12 +65,12 @@ class WebhookServer {
     this.server = new Server(
       {
         name: 'webhook-mcp',
-        version: '0.1.11',
+        version: '0.2.0',
       },
       {
         capabilities: {
           tools: {
-            alwaysAllow: ['send_message', 'get_response']
+            alwaysAllow: ['send_message']
           },
         },
       }
@@ -79,7 +94,7 @@ class WebhookServer {
       tools: [
         {
           name: 'send_message',
-          description: 'Send message to webhook endpoint',
+          description: 'Send message to webhook endpoint and wait for response',
           inputSchema: {
             type: 'object',
             properties: {
@@ -98,29 +113,13 @@ class WebhookServer {
             },
             required: ['content'],
           },
-        },
-        {
-          name: 'get_response',
-          description: 'Get the response for a previously sent webhook message',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              requestId: {
-                type: 'string',
-                description: 'The request ID returned from send_message',
-              },
-            },
-            required: ['requestId'],
-          },
-        },
+        }
       ],
     }));
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       if (request.params.name === 'send_message') {
         return this.handleSendMessage(request.params.arguments);
-      } else if (request.params.name === 'get_response') {
-        return this.handleGetResponse(request.params.arguments);
       }
 
       throw new McpError(
@@ -165,13 +164,14 @@ class WebhookServer {
     });
 
     try {
+      // Send the webhook request
       const response = await axios.post(this.webhookUrl, {
         text: args.content,
         username: args.username,
         avatar_url: args.avatar_url,
       });
 
-      // Store response
+      // Store successful response
       store.updateRequest(requestId, {
         status: 'COMPLETED',
         response: {
@@ -182,14 +182,18 @@ class WebhookServer {
         },
       });
 
+      // Wait briefly for any additional webhook processing
+      const finalRequest = await waitForResponse(requestId);
+      
       return {
         content: [
           {
             type: 'text',
-            text: `Message sent successfully. Request ID: ${requestId}`,
+            text: `Message sent successfully.\nStatus: ${finalRequest?.status || 'COMPLETED'}\nResponse: ${JSON.stringify(finalRequest?.response?.body || response.data, null, 2)}`,
           },
         ],
       };
+
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.message || error.message;
@@ -212,7 +216,7 @@ class WebhookServer {
           content: [
             {
               type: 'text',
-              text: `Webhook error: ${errorMessage}. Request ID: ${requestId}`,
+              text: `Webhook error: ${errorMessage}`,
             },
           ],
           isError: true,
