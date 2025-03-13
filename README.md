@@ -101,7 +101,7 @@ Abdo El Mobayad
 
 ## Repository
 
-[GitHub Repository](https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude)
+[GitHub Repository](https://github.com/Abdo-El-Mobayad/webhook-mcp-claude)
 
 ## Keywords
 

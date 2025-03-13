@@ -45,10 +45,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude.git"
+    "url": "git+https://github.com/Abdo-El-Mobayad/webhook-mcp-claude.git"
   },
   "bugs": {
-    "url": "https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude/issues"
+    "url": "https://github.com/Abdo-El-Mobayad/webhook-mcp-claude/issues"
   },
-  "homepage": "https://github.com/Abdo-El-Mobayad/Webhook-Mcp-Claude#readme"
+  "homepage": "https://github.com/Abdo-El-Mobayad/webhook-mcp-claude#readme"
 }
