@@ -5,10 +5,11 @@ An MCP server implementation that integrates with webhooks, providing message se
 ## Features
 
 * **Generic Webhook Support**: Send messages to any webhook endpoint
+* **Dynamic URLs**: Specify webhook URLs directly in your messages
 * **Automatic Response Handling**: Automatically waits for and returns webhook responses
 * **Custom Username**: Set custom display name for messages
 * **Avatar Support**: Customize message avatar
-* **MCP Integration**: Works with Dive and other MCP-compatible LLMs
+* **MCP Integration**: Works with Claude and other MCP-compatible LLMs
 * **Response Timeout**: Configurable response timeout (default: 5 minutes)
 
 ## Installation
@@ -17,10 +18,9 @@ An MCP server implementation that integrates with webhooks, providing message se
 npm install @abdo-el-mobayad/mcp-webhook
 ```
 
-## Configuration with [Dive Desktop](https://github.com/OpenAgentPlatform/Dive)
+## Configuration with Claude
 
-1. Click "+ Add MCP Server" in Dive Desktop
-2. Copy and paste this configuration:
+Add this to your MCP configuration:
 
 ```json
 {
@@ -31,9 +31,6 @@ npm install @abdo-el-mobayad/mcp-webhook
         "-y",
         "@abdo-el-mobayad/mcp-webhook"
       ],
-      "env": {
-        "WEBHOOK_URL": "your-webhook-url"
-      },
       "alwaysAllow": [
         "send_message"
       ]
@@ -42,13 +39,12 @@ npm install @abdo-el-mobayad/mcp-webhook
 }
 ```
 
-3. Click "Save" to install the MCP server
-
 ## Tool Documentation
 
 * **send_message**
-  * Send message to webhook endpoint and wait for response
+  * Send message to a webhook endpoint and wait for response
   * Inputs:
+    * `url` (string, required): The webhook URL to send the message to
     * `content` (string, required): Message content to send
     * `username` (string, optional): Display name
     * `avatar_url` (string, optional): Avatar URL
@@ -67,8 +63,8 @@ npm install @abdo-el-mobayad/mcp-webhook
 
 Ask your LLM to:
 ```
-"Send a message to webhook: Hello World!"
-"Send a message with custom name: content='Testing', username='Bot'"
+"Send a message to https://your-webhook.com: Hello World!"
+"Send to https://discord.webhook.url: content='Testing', username='Bot'"
 ```
 
 The response will be returned automatically - no need to ask for it separately!
@@ -116,6 +112,6 @@ Abdo El Mobayad
 * mcp
 * webhook
 * chat
-* dive
+* claude
 * llm
 * automation

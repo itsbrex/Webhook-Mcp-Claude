@@ -3,9 +3,9 @@ import { randomUUID } from 'node:crypto';
 export interface WebhookRequest {
   requestId: string;
   content: string;
+  url: string;
   username?: string;
   avatar_url?: string;
-  url: string;
   status: 'PENDING' | 'SENT' | 'COMPLETED' | 'FAILED' | 'TIMEOUT';
   sentAt: number;
   expiresAt: number;

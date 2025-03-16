@@ -50,7 +50,7 @@
 - Response tracking functionality with `get_response` tool
 - In-memory storage for webhook responses
 - Request ID generation for response tracking
-- Automatic cleanup of expired responses (24-hour retention)
+- Automatic cleanup of expired responses (1-hour retention)
 - Response status tracking (PENDING, COMPLETED, FAILED, TIMEOUT)
 - Enhanced error handling with response storage
 
@@ -58,3 +58,36 @@
 - Updated `send_message` to return request IDs
 - Enhanced documentation with response handling details
 - Added response retrieval examples
+
+## [0.3.1] - 2024-03-13
+
+### Changed
+- Updated documentation to reference Claude Desktop instead of Dive Desktop
+- Improved configuration instructions clarity
+
+## [0.3.0] - 2024-03-13
+
+### Changed
+- Combined send_message and get_response into a single operation
+- Increased response timeout to 5 minutes
+- Improved response handling with automatic waiting
+- Simplified API by removing get_response tool
+- Updated documentation for automatic response handling
+
+### Removed
+- get_response tool (now integrated into send_message)
+- Separate response retrieval step
+
+## [0.4.0] - 2024-03-13
+
+### Changed
+- Removed WEBHOOK_URL environment variable requirement
+- Added URL parameter to send_message tool
+- Updated documentation for dynamic URL support
+- Added URL validation
+- Simplified configuration
+
+### Added
+- Dynamic webhook URL support
+- URL validation function
+- Updated examples with URL usage

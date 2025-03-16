@@ -11,6 +11,7 @@ import axios from 'axios';
 import { store, WebhookRequest } from './store.js';
 
 interface SendMessageArgs {
+  url: string;
   content: string;
   username?: string;
   avatar_url?: string;
@@ -24,8 +25,8 @@ const isValidSendMessageArgs = (args: unknown): args is SendMessageArgs => {
   if (typeof args !== 'object' || args === null) {
     return false;
   }
-  const { content } = args as Record<string, unknown>;
-  return typeof content === 'string';
+  const { content, url } = args as Record<string, unknown>;
+  return typeof content === 'string' && typeof url === 'string';
 };
 
 const isValidGetResponseArgs = (args: unknown): args is GetResponseArgs => {
@@ -34,6 +35,15 @@ const isValidGetResponseArgs = (args: unknown): args is GetResponseArgs => {
   }
   const { requestId } = args as Record<string, unknown>;
   return typeof requestId === 'string';
+};
+
+const isValidUrl = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 // Helper function to wait for response with timeout
@@ -53,19 +63,12 @@ const waitForResponse = async (requestId: string, timeoutMs: number = 300000): P
 
 class WebhookServer {
   private server: Server;
-  private webhookUrl: string;
 
   constructor() {
-    const webhookUrl = process.env.WEBHOOK_URL;
-    if (!webhookUrl) {
-      throw new Error('WEBHOOK_URL environment variable is required');
-    }
-    this.webhookUrl = webhookUrl;
-
     this.server = new Server(
       {
         name: 'webhook-mcp',
-        version: '0.2.0',
+        version: '0.4.0',
       },
       {
         capabilities: {
@@ -78,10 +81,9 @@ class WebhookServer {
 
     this.setupToolHandlers();
     
-    // 加強錯誤處理
     this.server.onerror = (error) => {
       console.error('[MCP Server Error]', error);
-      process.exit(1);  // 遇到嚴重錯誤時結束程序
+      process.exit(1);
     };
     process.on('SIGINT', async () => {
       await this.server.close();
@@ -94,10 +96,14 @@ class WebhookServer {
       tools: [
         {
           name: 'send_message',
-          description: 'Send message to webhook endpoint and wait for response',
+          description: 'Send message to a webhook endpoint and wait for response',
           inputSchema: {
             type: 'object',
             properties: {
+              url: {
+                type: 'string',
+                description: 'The webhook URL to send the message to',
+              },
               content: {
                 type: 'string',
                 description: 'Message content to send',
@@ -111,7 +117,7 @@ class WebhookServer {
                 description: 'Avatar URL (optional)',
               }
             },
-            required: ['content'],
+            required: ['url', 'content'],
           },
         }
       ],
@@ -133,7 +139,7 @@ class WebhookServer {
     if (!isValidSendMessageArgs(args)) {
       throw new McpError(
         ErrorCode.InvalidParams,
-        'Content parameter is required'
+        'URL and content parameters are required'
       );
     }
 
@@ -149,15 +155,27 @@ class WebhookServer {
       };
     }
 
+    if (!isValidUrl(args.url)) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: 'Error: Invalid webhook URL format',
+          },
+        ],
+        isError: true,
+      };
+    }
+
     const requestId = store.generateRequestId();
 
     // Store request information
     store.saveRequest({
       requestId,
       content: args.content,
+      url: args.url,
       username: args.username,
       avatar_url: args.avatar_url,
-      url: this.webhookUrl,
       status: 'PENDING',
       sentAt: Date.now(),
       expiresAt: Date.now() + 30 * 60 * 1000, // 30 minutes
@@ -165,7 +183,7 @@ class WebhookServer {
 
     try {
       // Send the webhook request
-      const response = await axios.post(this.webhookUrl, {
+      const response = await axios.post(args.url, {
         text: args.content,
         username: args.username,
         avatar_url: args.avatar_url,
