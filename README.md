@@ -2,6 +2,8 @@
 
 An MCP server implementation that integrates with webhooks, providing message sending capabilities with automatic response handling.
 
+Build with [Calude Fast](https://claudefa.st/)
+
 ## Features
 
 * **Generic Webhook Support**: Send messages to any webhook endpoint
